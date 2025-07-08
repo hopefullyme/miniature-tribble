@@ -9,7 +9,7 @@
   "icons": [
     {
       "src": "icons/tire.svg",
-      "sizes": "any",
+      "sizes": "any 600x600",
       "purpose": "any"
     },
     {
