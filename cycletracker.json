@@ -1,0 +1,9 @@
+{
+    "name": "CycleTrackerTutorial",
+    "short_name": "CTT",
+    "description": "This app was made following the MDN PWA tutorial",
+    "start_url": "/",
+    "display": "standalone",
+  "theme_color": "#eeffee",
+  "background_color": "#eeffee"
+}
