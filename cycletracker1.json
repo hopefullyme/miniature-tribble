@@ -1,0 +1,21 @@
+{
+    "name": "CycleTrackerTutorial",
+    "short_name": "CTT",
+    "description": "This app was made following the MDN PWA tutorial",
+    "start_url": "/",
+    "display": "standalone",
+  "theme_color": "#eeffee",
+  "background_color": "#eeffee",
+  "icons": [
+    {
+      "src": "icons/tire.svg",
+      "sizes": "any",
+      "purpose": "any"
+    },
+    {
+      "src": "favicon.ico",
+      "sizes": "any",
+      "purpose":"any"
+    }
+  ]
+}

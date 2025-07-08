@@ -1,49 +1,56 @@
-const VERSION = "v0.1";
+// The version of the cache.
+const VERSION = "v0.4";
+
+// The name of the cache
 const CACHE_NAME = `period-tracker-${VERSION}`;
 
+// The static resources that the app needs to function.
 const APP_STATIC_RESOURCES = [
   "/",
   "/index.html",
-  "/style.css",
   "/app.js",
+  "/style.css",
+  "/icons/wheel.svg",
 ];
 
-
-self.addEventListener("install", (e)=>{
-    e.waitUntil(
-        (async ()=>{
-            const cache = await caches.open(CACHE_NAME);
-            cache.addAll(APP_STATIC_RESOURCES);
-        })(),
-    );
+// On install, cache the static resources
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(CACHE_NAME);
+      cache.addAll(APP_STATIC_RESOURCES);
+    })(),
+  );
 });
 
-self.addEventListener("activate", (event)=>{
-    event.waitUntil(
-        (async ()=>{
-            const names = await caches.keys();
-            await Promise.all(
-                names.map((name)=>{
-                    if (name !== CACHE_NAME){
-                        return caches.delete(name);
-                    }
-                    return undefined;
-                }),
-            );
-            await clients.claim();
-        })(),
-    );
+// delete old caches on activate
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    (async () => {
+      const names = await caches.keys();
+      await Promise.all(
+        names.map((name) => {
+          if (name !== CACHE_NAME) {
+            return caches.delete(name);
+          }
+          return undefined;
+        }),
+      );
+      await clients.claim();
+    })(),
+  );
 });
 
+// On fetch, intercept server requests
+// and respond with cached responses instead of going to network
 self.addEventListener("fetch", (event) => {
-  // when seeking an HTML page
+  // As a single page app, direct app to always go to cached home page.
   if (event.request.mode === "navigate") {
-    // Return to the index.html page
     event.respondWith(caches.match("/"));
     return;
   }
 
-  // For every other request type
+  // For all other requests, go to the cache first, and then the network.
   event.respondWith(
     (async () => {
       const cache = await caches.open(CACHE_NAME);
@@ -52,7 +59,7 @@ self.addEventListener("fetch", (event) => {
         // Return the cached response if it's available.
         return cachedResponse;
       }
-      // Respond with a HTTP 404 response status.
+      // If resource isn't in the cache, return a 404.
       return new Response(null, { status: 404 });
     })(),
   );
